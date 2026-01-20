@@ -1,0 +1,32 @@
+/* --- Global Header Styles --- */
+.global-header {
+    width: 100%;
+    padding: 15px 30px;
+    background-color: #1a1a20; /* Darker than body for contrast */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    color: var(--primary-blue, #00e0ff); /* Uses primary blue if available, fallback provided */
+    font-size: 1.5em;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-shadow: 0 0 5px rgba(0, 224, 255, 0.4);
+    transition: text-shadow 0.3s;
+}
+
+.header-title:hover {
+    text-shadow: 0 0 10px rgba(0, 224, 255, 0.8);
+}
+/* Ensure the body content starts below the fixed header */
+body {
+    padding-top: 70px; /* Adjust based on header height */
+}

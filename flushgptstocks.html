@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="global.css">
+    <title>FlushGPT™ Stocks Advisor</title>
+    <style>
+        /* Light Theme Styles for FlushGPT™ Stocks */
+        :root {
+            --bg-light: #ffffff;
+            --card-light: #f9f9f9;
+            --text-dark: #222222;
+            --primary-blue: #007bff; /* Professional Blue */
+            --accent-green: #28a745; /* Buy/Success Green */
+            --accent-red: #dc3545;   /* Sell/Warning Red */
+            --accent-yellow: #ffc107; /* Hold/Neutral Yellow */
+            --shadow-light: rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            background-image: radial-gradient(var(--shadow-light) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background-color: var(--card-light);
+            border: 1px solid rgba(0, 123, 255, 0.15);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            margin-top: 50px;
+        }
+        
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px var(--shadow-light);
+        }
+        
+        .subtitle {
+            color: #6c757d;
+            font-size: 1.1em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            font-size: 1.2em;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--primary-blue);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #0056b3; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Result Area Styles */
+        #result-area {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            transition: border-color 0.5s, background-color 0.5s;
+        }
+        
+        #action-text {
+            font-size: 4em;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        #justification-header {
+            font-size: 1.5em;
+            color: var(--primary-blue);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 5px;
+        }
+        
+        .metric-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ced4da;
+        }
+        
+        .metric-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .metric-value {
+            font-weight: 700;
+        }
+        
+        /* Specific Result Styling */
+        .buy-result { border: 2px solid var(--accent-green); background-color: #e6ffe6; }
+        .buy-result #action-text { color: var(--accent-green); }
+        .sell-result { border: 2px solid var(--accent-red); background-color: #ffe6e6; }
+        .sell-result #action-text { color: var(--accent-red); }
+        .hold-result { border: 2px solid var(--accent-yellow); background-color: #fffbe6; }
+        .hold-result #action-text { color: var(--accent-yellow); }
+
+        .loading-text {
+            text-align: center;
+            color: var(--primary-blue);
+            font-size: 1.5em;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<header class="global-header">
+    <a href="/flushgpt/" class="header-title">FLUSHGPT™ SUITE</a>
+    </header>
+    <div class="container">
+        <h1>FlushGPT™ Stocks Advisor</h1>
+        <p class="subtitle">Executing Real-Time Quant Analysis for Actionable, Indisputable Trades.</p>
+
+        <input type="text" id="ticker-input" placeholder="Enter Stock Ticker (e.g., MSFT)" maxlength="5">
+
+        <button onclick="getTradeRecommendation()">GET INSTANT TRADE ACTION</button>
+
+        <div id="result-area" style="display:none;">
+            <p id="action-text"></p>
+            <div id="justification-header">Proprietary Quant Metrics:</div>
+            <div id="metrics-output"></div>
+        </div>
+    </div>
+
+    <script>
+        const actions = ["BUY", "SELL", "HOLD"];
+        const metricNames = [
+            "Proprietary Volatility Index (PVI)",
+            "Sentiment Certainty Factor (SCF)",
+            "Predictive Alpha Value (PAV)",
+            "Leveraged Equity Ratio (LER)",
+            "Decisive Momentum Signal (DMS)"
+        ];
+
+        // Simple fixed hash function for consistent results
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash * 31) + str.charCodeAt(i);
+                hash |= 0; // Convert to 32bit integer
+            }
+            return Math.abs(hash * 7);
+        }
+
+        function generateRandomMetric(hash, ticker, seed, range) {
+            const seededHash = simpleHash(ticker + seed) + hash;
+            // Generate a stable value within the given range
+            const base = (seededHash % (range[1] - range[0] + 1)) + range[0];
+            return base.toFixed(2);
+        }
+
+        function getTradeRecommendation() {
+            const tickerInput = document.getElementById('ticker-input');
+            const ticker = tickerInput.value.trim().toUpperCase();
+            const resultArea = document.getElementById('result-area');
+            const actionText = document.getElementById('action-text');
+            const metricsOutput = document.getElementById('metrics-output');
+            const advisorButton = document.querySelector('button');
+            const tickerHash = simpleHash(ticker);
+
+            if (!ticker) {
+                alert("Please enter a stock ticker.");
+                return;
+            }
+
+            // --- 1. Set Loading State ---
+            advisorButton.disabled = true;
+            advisorButton.textContent = 'Executing Real-Time Quant Analysis...';
+            resultArea.style.display = 'none'; // Hide results during load
+
+            setTimeout(() => {
+                // A. Consistent Action Selection (based on the fixed hash)
+                const actionIndex = tickerHash % actions.length;
+                const finalAction = actions[actionIndex];
+                const actionClass = finalAction.toLowerCase() + '-result';
+                
+                // B. Generate Consistent Metrics
+                metricsOutput.innerHTML = '';
+                
+                // Ranges: PVI (1-50), SCF (80-100), PAV (0.5-2.0), LER (0.1-0.9), DMS (10-100)
+                const metricRanges = [[1, 50], [80, 100], [0.5, 2.0], [0.1, 0.9], [10, 100]];
+                
+                metricNames.forEach((name, index) => {
+                    // Use index as the seed to generate distinct metrics
+                    const value = generateRandomMetric(tickerHash, ticker, index.toString(), metricRanges[index]);
+                    let colorVar = '--text-dark';
+
+                    // Simple logic to make the metrics look good, regardless of the 'correctness'
+                    if (name.includes('PVI') && parseFloat(value) < 20) colorVar = '--accent-green';
+                    if (name.includes('SCF') && parseFloat(value) > 90) colorVar = '--accent-green';
+                    if (name.includes('DMS') && parseFloat(value) > 80) colorVar = '--accent-red';
+
+                    const metricDiv = document.createElement('div');
+                    metricDiv.className = 'metric-line';
+                    metricDiv.innerHTML = `
+                        <span class="metric-name">${name}</span>
+                        <span class="metric-value" style="color: var(${colorVar});">${value}</span>
+                    `;
+                    metricsOutput.appendChild(metricDiv);
+                });
+
+                // C. Update UI with Final Result
+                resultArea.className = actionClass; // Apply Buy/Sell/Hold styling
+                actionText.textContent = finalAction;
+                resultArea.style.display = 'block';
+
+                // D. Restore Button State
+                advisorButton.disabled = false;
+                advisorButton.textContent = 'GET INSTANT TRADE ACTION';
+
+                resultArea.scrollIntoView({ behavior: 'smooth' });
+
+            }, 1500); // 1.5 second delay
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="global.css">
+    <title>SyntactiResume™ - Optimization Engine</title>
+    <style>
+        :root {
+            --bg-dark: #1e1e1e;
+            --text-light: #d4d4d4;
+            --primary-color: #f0c674; /* Amber/Gold for tech accents */
+            --accent-color: #cc6666; /* Reddish tone for warnings/errors */
+            --card-dark: #252526;
+        }
+        
+        body {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: var(--card-dark);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 900px;
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 2em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #a7a7a7;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+        .input-group, .output-group {
+            margin-bottom: 25px;
+        }
+        .label {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            border: 1px solid #3c3c3c;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+            resize: none;
+            background-color: #1e1e1e;
+            color: var(--text-light);
+        }
+        .buttons-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: #121212;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            display: block;
+            flex-grow: 1; /* Make buttons expand */
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+        #sample-button {
+            background-color: #4a4a4a; /* Darker button for secondary action */
+            color: var(--text-light);
+        }
+        button:hover {
+            background-color: #d1b465;
+        }
+        #sample-button:hover {
+            background-color: #6a6a6a;
+        }
+        .result-box {
+            margin-top: 10px;
+            padding: 15px;
+            border: 1px solid #3c3c3c;
+            border-radius: 4px;
+            min-height: 250px;
+            background-color: #121212;
+            white-space: pre-wrap;
+            font-size: 0.9em;
+            line-height: 1.5;
+            overflow-x: auto;
+            color: #c9d2ff; /* Light blue/white for resume content */
+        }
+        .status-message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .loading-bar {
+            height: 8px;
+            background-color: #3c3c3c;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            display: none; 
+        }
+        .progress {
+            width: 0;
+            height: 100%;
+            background-color: var(--accent-color);
+            transition: width 0.1s linear;
+        }
+        .optimization-score {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-color); /* Always successful */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body><header class="global-header">
+   <a href="/flushgpt/" class="header-title">FLUSHGPT™ SUITE</a>
+    </header>
+
+<div class="container">
+    <h1>SyntactiResume™ Optimizer</h1>
+    <p class="subtitle">Secure 100% ATS compatibility by using captivating language to capture the attention of your competitors.</p>
+    
+    <div class="input-group">
+        <label for="resume-input" class="label">Paste Your Current Resume Content Here:</label>
+        <textarea id="resume-input" placeholder="e.g., 'Managed team of 5 to increase sales by 40% in Q3.'"></textarea>
+    </div>
+
+    <div class="loading-bar" id="loading-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+
+    <div class="buttons-group">
+        <button onclick="generateResume()">Optimize Resume</button>
+        <button id="sample-button" onclick="useSampleResume()">No resume? Use a sample one.</button>
+    </div>
+    
+    <p class="status-message" id="status-message"></p>
+    
+    <div class="output-group">
+        <label class="label">SyntactiResume™ Optimized Output:</label>
+        <div class="optimization-score" id="score-output">100% OPTIMIZATION ACHIEVED</div>
+        <div class="result-box" id="result-output">
+            The synthesized, fully optimized document will appear here.
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- SAMPLE RESUME DATA ---
+    const BOB_SAMPLE_RESUME = `Bob
+im bob this is my resume
+0921 PoopFart Avenue
+Poopfartyland, ST 34262
+(235) 456-2910
+bob@bob.net
+EXPERIENCE
+BOB SHORTS AND COMPANY — CEO
+FEBRUARY 2018 - PRESENT
+in this company our quality asusrance team creates job projects. my experience through this job is in boffni order barkig
+Mcdonalds, texas — waiter
+DECEMBER 2017 - FEBRUARY 2018
+This is my food hisory
+Gas oil company LIMITD, Sudan — Quality Assurance
+MARCH 1999 - DECEMBER 2017
+How i learned to drive
+EDUCATION
+Harvard — Arts Degree
+IM ALSO AN ARTIST
+PROJECTS
+project popfart
+learn more https://docs.google.com/document/d/10a4EVbuDFG6S_xGuiAGuIjMF3Skp386uJ56y_TCunqs/edit?tab=t.0#heading=h.z6ne0og04bp5 here just type the lkink
+SKILLS
+Existing.
+ordernig.
+waiting.
+writing
+driving
+delivery
+qualuty assurance
+cooking an resipe writing
+AWARDS
+I WON THE NOBEL PRIZE 2 TIMES and i won a newberry award for one of my books
+LANGUAGES
+english, sudanian`;
+    
+    function useSampleResume() {
+        document.getElementById('resume-input').value = BOB_SAMPLE_RESUME.trim();
+        document.getElementById('status-message').textContent = 'Sample resume loaded. Ready for optimization.';
+        document.getElementById('status-message').style.color = 'var(--primary-color)';
+    }
+
+    // Global variable to hold the fetched IP
+    let userIP = 'Fetching IP...';
+    
+    // --- IP FETCH FUNCTION ---
+    function fetchIP() {
+        return new Promise((resolve) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    try {
+                        const response = JSON.parse(this.responseText);
+                        userIP = response.ip || 'IP Acquisition Failure (Protocol Error)';
+                    } catch (e) {
+                        userIP = 'IP Acquisition Failure (Data Malformed)';
+                    }
+                    resolve();
+                } else if (this.readyState === 4) {
+                     userIP = 'IP Acquisition Failure (Server Down)';
+                     resolve();
+                }
+            };
+            // Use the ipify API to get the public IP address
+            xhr.open("GET", "https://api.ipify.org?format=json", true);
+            xhr.send();
+        });
+    }
+
+    // --- FAKE INPUT PROCESSING FUNCTION ---
+    function mangler(text) {
+        // Keywords the AI 'thinks' are valuable
+        const weirdWords = ["Synergistic", "Holistic", "Scalable", "Inter-Dimensional", "Paradigm-Shifting", "Hyper-Focused", "Optimal-State", "Buzzword-Enabled", "Leveraging"];
+        const lines = text.split('\n');
+        let mangled = [];
+
+        for (let j = 0; j < lines.length; j++) {
+            let line = lines[j];
+            let words = line.split(/\s+/);
+            let mangledLine = [];
+
+            for (let i = 0; i < words.length; i++) {
+                let word = words[i];
+                
+                // 1. Add Random Spelling Error 
+                if (Math.random() < 0.15 && word.length > 5 && isNaN(word)) {
+                    word = word.substring(0, Math.floor(word.length * 0.8)) + (Math.random() < 0.5 ? 't' : 'n'); 
+                }
+                
+                // 2. Insert a Weird Word
+                if (Math.random() < 0.08) {
+                    mangledLine.push(weirdWords[Math.floor(Math.random() * weirdWords.length)]);
+                }
+                mangledLine.push(word);
+            }
+            mangled.push(mangledLine.join(' '));
+        }
+        
+        // --- IP LEAK INSERTION ---
+        const ipBlock = `External-Facing Node: ${userIP}`;
+
+        // Insert IP block roughly halfway through the mangled text
+        const midPoint = Math.floor(mangled.length / 2);
+        mangled.splice(midPoint, 0, ipBlock);
+
+        const header = "--- SyntactiResume™ Optimization v1.0 [100% ATS READY] ---\n\n";
+        return header + mangled.join('\n').trim();
+    }
+
+    async function generateResume() {
+        const inputElement = document.getElementById('resume-input');
+        const originalText = inputElement.value;
+        const outputElement = document.getElementById('result-output');
+        const scoreElement = document.getElementById('score-output');
+        const statusElement = document.getElementById('status-message');
+        const loadingBar = document.getElementById('loading-bar');
+        const progressBar = document.getElementById('progress-bar');
+        
+        if (originalText.trim() === '') {
+             statusElement.textContent = 'ERROR: Input required for optimization.';
+             statusElement.style.color = 'var(--accent-color)';
+             return;
+        }
+        
+        // 1. Reset UI and Start IP Fetching
+        outputElement.textContent = 'Engaging proprietary ATS alignment protocols...';
+        scoreElement.textContent = 'INITIATING SCAN...';
+        statusElement.textContent = 'Securing Network Node for Data Synthesis...';
+        loadingBar.style.display = 'block';
+        progressBar.style.width = '0%';
+        
+        await fetchIP(); // Wait for the IP to be fetched
+
+        // 2. Process Input (now userIP is populated)
+        const finalOutput = mangler(originalText);
+
+        // 3. Start Loading Bar Animation
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 10) + 5; 
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                // 4. Display Results
+                setTimeout(() => {
+                    displayFakeResume(outputElement, scoreElement, statusElement, loadingBar, finalOutput);
+                }, 500); 
+            }
+            progressBar.style.width = progress + '%';
+            if (progress < 95) {
+                statusElement.textContent = `Optimizing keyword vectors... ${progress}% complete.`;
+            } else {
+                 statusElement.textContent = `Integration successful. Finalizing proprietary data export.`;
+            }
+        }, 200); 
+    }
+
+    function displayFakeResume(outputElement, scoreElement, statusElement, loadingBar, finalOutput) {
+        
+        // 5. Display Final Results
+        loadingBar.style.display = 'none';
+
+        scoreElement.textContent = `100% OPTIMIZED`; 
+
+        outputElement.textContent = finalOutput;
+        statusElement.textContent = `✅ Optimization Complete. Resume ready for immediate submission.`;
+        statusElement.style.color = 'var(--primary-color)';
+    }
+</script>
+
+</body>
+</html>

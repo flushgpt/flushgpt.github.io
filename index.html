@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlushGPT™ AI Suite - The Future of Intelligence</title>
+    <style>
+        /* Base Colors and Fonts - Dark Theme */
+        :root {
+            --bg-dark: #0a0a0c; 
+            --card-dark: rgba(30, 30, 35, 0.6); 
+            --text-light: #e6e6e6; 
+            --primary-blue: #00e0ff; 
+            --accent-green: #6aff87; 
+            --glass-blur: 8px; 
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            /* Enhanced Background Effect (more subtle grid and color) */
+            background-image: 
+                radial-gradient(rgba(0, 224, 255, 0.15) 1px, transparent 0),
+                radial-gradient(rgba(0, 224, 255, 0.1) 1px, transparent 0);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            background-blend-mode: color-dodge;
+            transition: background-color 0.5s;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px; 
+            padding: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-blue);
+            font-size: 4em; 
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            text-shadow: 0 0 15px rgba(0, 224, 255, 0.7), 0 0 25px rgba(0, 224, 255, 0.4); 
+            transition: text-shadow 0.5s;
+        }
+        
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.5em;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        /* About Section Styling */
+        .about-section {
+            width: 100%;
+            max-width: 900px;
+            padding: 25px 40px;
+            margin-top: 60px; 
+            margin-bottom: 20px;
+            background-color: rgba(40, 40, 50, 0.7); 
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(106, 255, 135, 0.3); 
+            border-radius: 8px;
+            text-align: center;
+            line-height: 1.6;
+            font-size: 1.1em;
+            box-shadow: 0 0 15px rgba(106, 255, 135, 0.2);
+        }
+
+        .about-section strong {
+            color: var(--accent-green);
+        }
+
+        .about-section a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .about-section a:hover {
+            color: #fff;
+            text-shadow: 0 0 5px var(--primary-blue);
+        }
+        
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 40px; 
+            width: 90%;
+            max-width: 1300px;
+        }
+        
+        .tool-card {
+            /* Glassmorphism Effect */
+            background-color: var(--card-dark);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid rgba(0, 224, 255, 0.2); 
+            border-radius: 12px; 
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
+            transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, background-color 0.4s;
+            text-decoration: none;
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card::before { 
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-top: 5px solid var(--primary-blue);
+            border-left: 5px solid transparent;
+            width: 40%; 
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-10px) scale(1.02); 
+            box-shadow: 0 0 5px var(--primary-blue), 0 0 15px var(--primary-blue), 0 15px 40px rgba(0, 224, 255, 0.4); 
+            background-color: rgba(30, 30, 35, 0.8); 
+            border-color: var(--primary-blue);
+        }
+        
+        .tool-title {
+            font-size: 1.7em;
+            color: var(--primary-blue);
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        .tool-desc {
+            color: #c0c0c0;
+            font-size: 1.05em;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+        
+        .tool-link {
+            margin-top: 25px;
+            color: var(--accent-green);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 1.1em;
+        }
+        
+        .tool-link:hover {
+            color: var(--primary-blue); 
+        }
+
+        /* Copyright Footer Styling */
+        .copyright-footer {
+            width: 100%;
+            margin-top: 40px; /* Space from the About section */
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6c757d; /* Muted text */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive adjustment for smaller screens */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+                letter-spacing: 4px;
+            }
+            .subtitle {
+                font-size: 1.2em;
+            }
+            .tool-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .tool-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>FLUSHGPT™</h1>
+        <p class="subtitle">Proprietary Tools for Superior (and Confident) Results.</p>
+    </div>
+
+    <div class="tool-grid">
+        
+        <a href="https://tj-commits.github.io/chatbot.html" class="tool-card">
+            <div class="tool-title">FlushGPT™ Chatbot</div>
+            <p class="tool-desc">Engage in highly confident, and complex conversations with our core large language model, FlushGPT™, designed to simulate helpful conversations.</p>
+            <span class="tool-link">Launch Chatbot →</span>
+        </a>
+
+        <a href="imagegenerator.html" class="tool-card">
+            <div class="tool-title">DULL-E™ Image Generator</div>
+            <p class="tool-desc">Transform ambitious text prompts into universally recognizable, high-quality realistic visual representations.</p>
+            <span class="tool-link">Generate Images →</span>
+        </a>
+        
+        <a href="truth.html" class="tool-card">
+            <div class="tool-title">SyntactiTruth™ Fact Verifier</div>
+            <p class="tool-desc">Assigning indisputable veracity to any claim using proprietary algorithms.</p>
+            <span class="tool-link">Verify Truth →</span>
+        </a>
+
+        <a href="spellcheck.html" class="tool-card">
+            <div class="tool-title">SyntactAI™ Spell Checker</div>
+            <p class="tool-desc">Advanced linguistic analysis that corrects human error efficiently and accurately.</p>
+            <span class="tool-link">Check Spelling →</span>
+        </a>
+        
+        <a href="resume.html" class="tool-card">
+            <div class="tool-title">SyntactiResume™ Optimizer</div>
+            <p class="tool-desc">Ensure 100% Applicant Tracking System (ATS) compatibility by injecting high-density keywords and optimizing personal network credentials.</p>
+            <span class="tool-link">Optimize Resume →</span>
+        </a>
+
+        <a href="syntactcode.html" class="tool-card">
+            <div class="tool-title">SyntactCode™ Code Generator</div>
+            <p class="tool-desc">Synthesize complex feature requests into the most computationally efficient solution.</p>
+            <span class="tool-link">Synthesize Code →</span>
+        </a>
+
+        <a href="flushgptstocks.html" class="tool-card">
+            <div class="tool-title">FlushGPT™ Stocks Advisor</div>
+            <p class="tool-desc">Executing Real-Time Quant Analysis to deliver definitive, actionable BUY/SELL/HOLD recommendations.</p>
+            <span class="tool-link">Get Trade Action →</span>
+        </a>
+        
+        <a href="captiongenerator.html" class="tool-card">
+            <div class="tool-title">DULL-E™ Image Caption Generator</div>
+            <p class="tool-desc">Creates highly literal, technically verbose, and optimally generic captions for all your social media and metadata needs.</p>
+            <span class="tool-link">Generate Captions →</span>
+        </a>
+        </div>
+    
+    <div class="about-section">
+        <p>FlushGPT™ was created by <a href="https://te63ute.weebly.com"><strong>Ultramind Foilets Systems Inc.</strong></a>, a team dedicated to pushing the boundaries of artificial intelligence.</p>
+        <p>The creators of FlushGPT™ pour their hearts, souls, and every available resource into these extremely helpful AI tools, ensuring they deliver an experience that is both supremely confident and entirely proprietary. <a href="https://te63ute.weebly.com" target="_blank">Visit our corporate site to learn more.</a></p>
+    </div>
+
+    <footer class="copyright-footer">
+        Copyright 2026 UltraMind Foilets Systems Inc. and Airlock Ventures
+    </footer>
+
+</body>
+</html>

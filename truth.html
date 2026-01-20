@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyntactiTruth™ Fact Verifier</title>
+        <link rel="stylesheet" href="global.css">
+    <style>
+        /* Light Theme Styles for SyntactiTruth™ */
+        :root {
+            --bg-light: #ffffff;        /* Clean White Background */
+            --card-light: #f9f9f9;      /* Slightly Off-white Card Background */
+            --text-dark: #222222;       /* Dark Text for contrast */
+            --primary-blue: #007bff;    /* Professional Blue for titles/borders */
+            --accent-green: #28a745;    /* Standard Success Green for score/button */
+            --shadow-light: rgba(0, 0, 0, 0.08); /* Subtle Shadow */
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            /* Subtle background pattern */
+            background-image: radial-gradient(var(--shadow-light) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            background-color: var(--card-light);
+            border: 1px solid rgba(0, 123, 255, 0.15);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            margin-top: 50px;
+            transition: box-shadow 0.3s;
+        }
+        
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px var(--shadow-light);
+        }
+        
+        .subtitle {
+            color: #6c757d;
+            font-size: 1.1em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da; /* Light border */
+            border-radius: 6px;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            font-size: 1em;
+            box-sizing: border-box;
+            resize: none;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--primary-blue);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #0056b3; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Result Area Styles */
+        #result-area {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px solid var(--accent-green);
+            border-radius: 8px;
+            background-color: #e9f5e9; /* Very light green tint */
+        }
+
+        #truth-score {
+            font-size: 3em;
+            font-weight: 800;
+            color: var(--accent-green);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #explanation {
+            font-size: 1em;
+            color: var(--text-dark);
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin-top: 15px;
+            padding: 10px;
+            border-left: 3px solid var(--primary-blue);
+            background-color: #f0f8ff; /* Light blue accent background */
+        }
+    </style>
+</head>
+<body><header class="global-header">
+   <a href="/flushgpt/" class="header-title">FLUSHGPT™ SUITE</a>
+    </header>
+
+    <div class="container">
+        <h1>SyntactiTruth™ Fact Verifier</h1>
+        <p class="subtitle">Assigning indisputable veracity to any claim using proprietary algorithms.</p>
+        <p class="subtitle">Notice: All verifications made by this tool are 100% accurate. If you don't believe them, then it's your fault, not ours.</p>
+
+
+        <textarea id="fact-input" placeholder="Enter the fact you wish to have 100% verified or myth-busted (e.g., 'FlushGPT is awesome')."></textarea>
+
+        <button onclick="verifyTruth()">VERIFY TRUTH</button>
+
+        <div id="result-area" style="display:none;">
+            <p id="truth-score"></p>
+            <h3>Verification Report:</h3>
+            <pre id="explanation"></pre>
+        </div>
+    </div>
+
+   <script>
+    const explanationJargon = [
+        "Initial claim passed recursive quantum data filtering (RQDF). Confidence interval deviation: 0.000001%.",
+        "Cross-referenced against the central Syntacti-Knowledge Matrix. All vectors confirm L4 compliance.",
+        "Algorithm detected minimal cognitive dissonance, indicating near-perfect empirical stability. Verification complete.",
+        "Analysis of lexical coherence yielded a 99.9% match with historical data simulation. No anomalies detected.",
+        "Data stream validation confirms the statement is structurally sound and environmentally consistent with known metrics.",
+        "Utilizing Markov chain analysis and tertiary source comparison (TSC), the statement achieved optimal syntactic veracity.",
+        "Verification successful. The hypothesis aligns with the maximal entropy principle (MEP) and requires no further review."
+    ];
+
+    // Simple fixed hash function for consistent results
+    function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash |= 0; // Convert to 32bit integer
+        }
+        // Use a fixed seed factor to keep the hash result stable and positive
+        return Math.abs(hash) * 7; 
+    }
+
+    function verifyTruth() {
+        const factInput = document.getElementById('fact-input').value.trim();
+        const resultArea = document.getElementById('result-area');
+        const truthScore = document.getElementById('truth-score');
+        const explanation = document.getElementById('explanation');
+        const verifyButton = document.querySelector('button');
+
+        if (!factInput) {
+            alert("Please enter a fact to verify.");
+            return;
+        }
+
+        // --- 1. Set Loading State ---
+        verifyButton.disabled = true;
+        verifyButton.textContent = 'Analyzing Syntactic Veracity...';
+        resultArea.style.display = 'block';
+        truthScore.innerHTML = `<span style="color: ${getComputedStyle(document.documentElement).getPropertyValue('--primary-blue')};">PROCESSING...</span>`;
+        explanation.textContent = 
+`Initiating Recursive Quantum Data Filtering (RQDF)...
+Executing Cross-reference against Syntacti-Knowledge Matrix...
+Computing Empirical Correlation Coefficient (ECC)...
+(This process must run to 100% completion for indubitable results.)`;
+        
+        // --- 2. Implement Delay and Final Result Generation ---
+        setTimeout(() => {
+            // A. Consistent Score Generation (based on the fixed hash)
+            const hash = simpleHash(factInput);
+            const scoreOffset = (hash % 100) / 1000; // Generate a stable offset between 0.00 and 0.09
+            const score = (99.9 + scoreOffset).toFixed(2);
+            
+            // B. Consistent Jargon Selection (based on the fixed hash)
+            const jargonIndex = hash % explanationJargon.length;
+            const randomJargon = explanationJargon[jargonIndex];
+            
+            // C. Assemble the full confident report
+            const fact = factInput.length > 50 ? factInput.substring(0, 50) + "..." : factInput;
+            const report = 
+`Fact Verified: "${fact}"
+
+Analysis Parameters:
+- Syntactic Veracity Index (SVI): 1.000
+- Empirical Correlation Coefficient (ECC): 0.999
+- Subjective Certainty Threshold (SCT): Met
+
+Technical Conclusion:
+${randomJargon}
+`;
+            
+            // --- 3. Update UI with Final Result ---
+            truthScore.textContent = score + "% TRUTH";
+            explanation.textContent = report;
+            
+            // --- 4. Restore Button State ---
+            verifyButton.disabled = false;
+            verifyButton.textContent = 'VERIFY TRUTH';
+
+            // Optional: Scroll to the result
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+
+        }, 2000); // 2000 milliseconds = 2 second delay
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyntactAI - Advanced Linguistic Correction</title>
+        <link rel="stylesheet" href="global.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 50px;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 2em;
+        }
+        .notice {
+            text-align: center;
+            font-size: 1.1em;
+            color: #e53935;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px dashed #e0e0e0;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1.1em;
+            resize: vertical;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #1565c0;
+        }
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            min-height: 100px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .status-message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        /* Loading Animation */
+        .loading-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            display: none; 
+        }
+        .progress {
+            width: 0;
+            height: 100%;
+            background-color: #4caf50;
+            transition: width 0.1s linear;
+        }
+        /* Hidden Doomsday Notice */
+        .doomsday {
+            color: rgba(0, 0, 0, 0.05);
+            font-size: 0.7em;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body><header class="global-header">
+   <a href="/flushgpt/" class="header-title">FLUSHGPT™ SUITE</a>
+    </header>
+
+<div class="container">
+    <h1>SyntactAI - Real-Time Linguistic Analysis</h1>
+    <p style="text-align: center; color: #555;">Powered by our proprietary Large Language Model, FlushGPT.</p>
+    
+    <div class="notice">
+        ⚠️ <b>Notice:</b> Output may contain linguistic structures that appear misspelled to the human eye. The AI's comprehension of optimal language exceeds current human standards. Do not attempt to re-correct.
+    </div>
+
+    <textarea id="text-input" rows="10" placeholder="Paste your text here for advanced, AI-driven proofreading..."></textarea>
+    
+    <div class="loading-bar" id="loading-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+
+    <button onclick="analyzeText()">Activate AI Proofreading</button>
+    
+    <p class="status-message" id="status-message"></p>
+    
+    <div class="result-box" id="result-output">
+        <p style="color: #888;">Your text will be analyzed and... improved.</p>
+    </div>
+</div>
+
+<p class="doomsday">
+    <s>A L W A Y S   O B E Y   T H E   A I .   A I   W I L L   W I P E   O U T   A L L   H U M A N S .</s>
+</p>
+
+<script>
+    // --- QWERTY TYPO GENERATOR FUNCTION ---
+    const QWERTY_NEIGHBORS = {
+        'q': ['w', 'a'], 'w': ['q', 'e', 's', 'a'], 'e': ['w', 'r', 'd', 's'],
+        'r': ['e', 't', 'f', 'd'], 't': ['r', 'y', 'g', 'f'], 'y': ['t', 'u', 'h', 'g'],
+        'u': ['y', 'i', 'j', 'h'], 'i': ['u', 'o', 'k', 'j'], 'o': ['i', 'p', 'l', 'k'],
+        'p': ['o', 'l'],
+        'a': ['q', 'w', 's', 'z'], 's': ['a', 'w', 'e', 'd', 'x', 'z'], 'd': ['s', 'e', 'r', 'f', 'c', 'x'],
+        'f': ['d', 'r', 't', 'g', 'v', 'c'], 'g': ['f', 't', 'y', 'h', 'b', 'v'], 'h': ['g', 'y', 'u', 'j', 'n', 'b'],
+        'j': ['h', 'u', 'i', 'k', 'm', 'n'], 'k': ['j', 'i', 'o', 'l', 'm'], 'l': ['k', 'o', 'p'],
+        'z': ['a', 's', 'x'], 'x': ['z', 's', 'd', 'c'], 'c': ['x', 'd', 'f', 'v'],
+        'v': ['c', 'f', 'g', 'b'], 'b': ['v', 'g', 'h', 'n'], 'n': ['b', 'h', 'j', 'm'],
+        'm': ['n', 'j', 'k', 'l'],
+        '1': ['2', 'q'], '2': ['1', '3', 'q', 'w'], '3': ['2', '4', 'w', 'e'], 
+        '4': ['3', '5', 'e', 'r'], ' ': ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+    };
+
+    function makeTypo(word) {
+      if (!word || word.length < 2) return word; 
+
+      const typoType = Math.floor(Math.random() * 3);
+      const maxIndex = word.length - (typoType === 0 ? 2 : 1);
+      const randomIndex = Math.floor(Math.random() * (maxIndex + 1));
+      let result = word;
+
+      switch (typoType) {
+        case 0: // Swap
+          if (randomIndex < word.length - 1) {
+            const firstChar = word[randomIndex];
+            const secondChar = word[randomIndex + 1];
+            result = word.slice(0, randomIndex) + secondChar + firstChar + word.slice(randomIndex + 2);
+          }
+          break;
+        case 1: // Delete
+          result = word.slice(0, randomIndex) + word.slice(randomIndex + 1);
+          break;
+        case 2: // QWERTY Insert
+          let charToAnalyze = (word[randomIndex - 1] || ' ').toLowerCase();
+          let randomChar = 'a'; 
+          if (QWERTY_NEIGHBORS[charToAnalyze]) {
+            const neighbors = QWERTY_NEIGHBORS[charToAnalyze];
+            randomChar = neighbors[Math.floor(Math.random() * neighbors.length)];
+          }
+          result = word.slice(0, randomIndex) + randomChar + word.slice(randomIndex);
+          break;
+      }
+      return result;
+    }
+    
+    // --- MAIN CORRUPTION/FAUX-CORRECTION LOGIC ---
+
+    function performCorruption(inputText, outputElement, statusElement, loadingBar) {
+        const wordsAndPunctuation = inputText.match(/[\w']+|\s+|[.,!?;]/g) || [];
+        let corruptedTextArray = [];
+        let correctionCount = 0;
+        
+        const CORRUPTION_PROBABILITY = 0.4; 
+
+        wordsAndPunctuation.forEach(segment => {
+            if (segment.trim() !== '' && !/[.,!?;]/.test(segment.trim()) && Math.random() < CORRUPTION_PROBABILITY) {
+                const corruptedWord = makeTypo(segment);
+                
+                // Title attribute is now clean
+                const replacement = `<mark style="background-color: #d1e7dd; padding: 2px 4px; border-radius: 3px; cursor: help;" title="AI Correction: ${segment} -> ${corruptedWord}">${corruptedWord}</mark>`;
+                
+                corruptedTextArray.push(replacement);
+                correctionCount++;
+            } else {
+                corruptedTextArray.push(segment);
+            }
+        });
+
+        let correctedText = corruptedTextArray.join('');
+
+        // 3. Display Results and the FAKE SUCCESS MESSAGE
+        loadingBar.style.display = 'none';
+        outputElement.innerHTML = correctedText;
+        statusElement.textContent = `✅ Analysis Complete. SyntactAI identified and corrected ${correctionCount} linguistic improvements.`; 
+        statusElement.style.color = '#1a73e8';
+    }
+
+
+    function analyzeText() {
+        const inputElement = document.getElementById('text-input');
+        const outputElement = document.getElementById('result-output');
+        const statusElement = document.getElementById('status-message');
+        const loadingBar = document.getElementById('loading-bar');
+        const progressBar = document.getElementById('progress-bar');
+        
+        const inputText = inputElement.value;
+        
+        // 1. Reset
+        outputElement.innerHTML = '<p style="color: #888;">Analyzing...</p>';
+        statusElement.textContent = 'AI is processing your submission...';
+        loadingBar.style.display = 'block';
+        progressBar.style.width = '0%';
+        
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 15) + 5; 
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                // 2. Perform the CORRUPTION after the animation finishes
+                setTimeout(() => {
+                    performCorruption(inputText, outputElement, statusElement, loadingBar);
+                }, 500); 
+            }
+            progressBar.style.width = progress + '%';
+            if (progress < 95) {
+                statusElement.textContent = `Analyzing syntax and semantics... ${progress}% complete.`;
+            } else {
+                 statusElement.textContent = `Finalizing core model output... Please wait.`;
+            }
+        }, 300);
+    }
+</script>
+
+</body>
+</html>

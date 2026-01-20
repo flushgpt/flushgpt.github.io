@@ -1,0 +1,100 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a2e; /* Dark background */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #162447; /* Slightly lighter dark container */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+}
+
+h1 {
+    color: #e5ff54; /* Bright accent color */
+    margin-bottom: 10px;
+}
+
+p {
+    margin-bottom: 25px;
+}
+
+#generator-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#prompt-input {
+    padding: 12px;
+    border: 2px solid #2a666e;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #24305e;
+    color: #fff;
+}
+
+#prompt-input::placeholder {
+    color: #bbb;
+}
+
+button {
+    background-color: #e5ff54; /* Accent color */
+    color: #162447;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background-color: #c9e049;
+    transform: translateY(-1px);
+}
+
+#result-area {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #2a666e;
+}
+
+#message {
+    font-style: italic;
+    color: #aaa;
+}
+/* ... (existing styles) ... */
+
+/* New CSS for the loading animation */
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.loading {
+    cursor: wait !important;
+}
+
+.loading h1, .loading button {
+    animation: flicker 0.1s infinite alternate;
+}
+
+#generated-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border: 3px solid #e5ff54;
+    border-radius: 8px;
+    margin-top: 15px;
+}
